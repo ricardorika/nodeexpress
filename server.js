@@ -8,13 +8,21 @@ const nodemailer = require('nodemailer');
 let listProducts = [
   {
     id: 1,
-    name: 'Product 1',
-    price: 10
+    name: 'Tênis Nike',
+    price: 300,
+    description: 'Tênis Nike 3.0'
   },
   {
     id: 2,
-    name: 'Product 2',
-    price: 100
+    name: 'Tênis Adidas',
+    price: 400,
+    description: 'Tênis Adidas NMD'
+  },
+  {
+    id: 3,
+    name: 'Tênis Puma',
+    price: 230,
+    description: 'Tênis Puma'
   }
 ];
 
@@ -42,6 +50,11 @@ app.get('/products', (req, res) => {
 
 app.get('/contact', (req, res) => {
   res.render('contact.html');
+});
+
+
+app.get('/ricardo', (req, res) => {
+  res.render('ricardo.html');
 });
 
 app.post('/send', (req, res) => {
