@@ -4,27 +4,7 @@ const nunjucks = require('nunjucks');
 const bodyParser = require('body-parser');
 const nodemailer = require('nodemailer');
 
-
-let listProducts = [
-  {
-    id: 1,
-    name: 'Tênis Nike',
-    price: 300,
-    description: 'Tênis Nike 3.0'
-  },
-  {
-    id: 2,
-    name: 'Tênis Adidas',
-    price: 400,
-    description: 'Tênis Adidas NMD'
-  },
-  {
-    id: 3,
-    name: 'Tênis Puma',
-    price: 230,
-    description: 'Tênis Puma'
-  }
-];
+let listProducts = require('./data/products.json');
 
 
 nunjucks.configure('views', {
@@ -81,7 +61,6 @@ app.post('/send', (req, res) => {
     }
     res.send('ok');
   });
-
 });
 
 app.get('/product/:id', (req, res) => {
@@ -89,6 +68,19 @@ app.get('/product/:id', (req, res) => {
     return item.id == req.params.id
   })
   res.render('product.html', {product: product});
+});
+
+
+// APIs
+app.get('/api/products', (req, res) => {
+  res.send(listProducts);
+});
+
+app.get('/api/product/:id', (req, res) => {
+  const product = listProducts.find((item) => {
+    return item.id == req.params.id
+  })
+  res.send(product);
 });
 
 app.listen(3000, () => {
