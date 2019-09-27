@@ -1,0 +1,25 @@
+{% extends './layouts/base.html' %}
+
+{% block content %}
+<h1>Usuários</h1>
+<ul class="products">
+{% for item in users %}
+	  <li>
+      <p>{{ item.name }}</p>
+      <p>E-mail: {{ item.email }}</p>
+      <p>Login: {{ item.login }}</p>
+      </li>
+    {% endfor %}
+</ul>
+{% endblock %}
+
+{% block title %}
+  Usuários {{ item.id }}
+{% endblock %}
+
+{% block script %}
+  <script src="/js/products.js" charset="utf-8"></script>
+{% endblock %}
+{% block styles %}
+  <link rel="stylesheet" href="styles/products.css">
+{% endblock %}

@@ -1,11 +1,25 @@
+const mongoose = require("mongoose");
 const express = require('express');
 const app = express();
 const nunjucks = require('nunjucks');
 const bodyParser = require('body-parser');
 const nodemailer = require('nodemailer');
+const ProductsSchema = require('./schemas/Products');
+const UsersSchema = require('./schemas/users');
+const Products = mongoose.model('Product', ProductsSchema);
+const Users = mongoose.model('Users', UsersSchema);
+const MONGODB_URL = 'mongodb://@localhost:27017/store';
+mongoose.connect(MONGODB_URL, {useNewUrlParser: true}, err => {
+    if (err) {
+        console.error('[SERVER_ERROR] MongoDB Connection:', err);
+        process.exit(1);
+    }
+    console.info('Mongo connected');
+    app.listen(3000, () => {
+    console.log('Escutando na porta 3000');
+});
 
-let listProducts = require('./data/products.json');
-
+});
 
 nunjucks.configure('views', {
     autoescape: true,
@@ -23,11 +37,20 @@ app.use(express.static('public'));
 app.get('/', (req, res) => {
   res.render('index.html');
 });
-
-app.get('/products', (req, res) => {
-  res.render('products.html', {products: listProducts});
+  
+app.get('/products', (req, res) => {  
+  Products.find((err, obj) => {
+      res.render('products.html', {products: obj});
+  });
+    
 });
-
+app.get('/users', (req, res) => {  
+  Users.find((err, obj) => {
+      res.render('users.html', {users: obj});
+  });
+  
+});
+  
 app.get('/contact', (req, res) => {
   res.render('contact.html');
 });
@@ -64,13 +87,16 @@ app.post('/send', (req, res) => {
 });
 
 app.get('/product/:id', (req, res) => {
-  const product = listProducts.find((item) => {
-    return item.id == req.params.id
-  })
-  res.render('product.html', {product: product});
+  Products.find({"_id": req.params.id }, (err, obj) => {
+      if (err) {
+        res.render('notfound.html');
+      } else {
+        const product = obj[0];
+        res.render('product.html', {product: product});
+      }
+  });
 });
-
-
+  
 // APIs
 app.get('/api/products', (req, res) => {
   res.send(listProducts);
@@ -83,6 +109,3 @@ app.get('/api/product/:id', (req, res) => {
   res.send(product);
 });
 
-app.listen(3000, () => {
-  console.log('Escutando na porta 3000');
-});

@@ -13,6 +13,7 @@ function addToCart (product) {
     product.quantity = 1;
     cart.push(product);
   }
+
   sessionStorage.setItem("cart", JSON.stringify(cart));
   showCartItems();
 }
